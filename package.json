@@ -1,0 +1,5 @@
+{ "dependencies": { "@wharfkit/antelope": "^1.0.7", "@wharfkit/common": "^1.2.2" }, "name": "lighthouse-node", "module": "index.ts", "type": "module", "devDependencies": {
+  "@types/bun": "latest"
+}, "peerDependencies": {
+  "typescript": "^5.0.0"
+} }
