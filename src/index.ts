@@ -10,8 +10,8 @@ const MAINNET_CHAINS = [
     Chains.Libre,
     Chains.UX,
     Chains.FIO,
-    Chains.Ayetu,
-    Chains.KOY,
+    // Chains.Ayetu,
+    // Chains.KOY,
 ];
 
 const TESTNET_CHAINS = [
@@ -20,12 +20,12 @@ const TESTNET_CHAINS = [
     Chains.ProtonTestnet,
     Chains.LibreTestnet,
     Chains.FIOTestnet,
-    Chains.UXTestnet,
-    Chains.AyetuTestnet,
-    Chains.KOYTestnet,
+    // Chains.UXTestnet,
+    // Chains.AyetuTestnet,
+    // Chains.KOYTestnet,
 ];
 
-const accountLookup = async (req: Request) => {
+export const accountLookup = async (req: Request) => {
   const url = new URL(req.url);
   const key = url.pathname.split("/")[2];
   const includeTestnets = url.searchParams.get("includeTestnets") === "true";
@@ -38,7 +38,7 @@ const accountLookup = async (req: Request) => {
     return new Response(JSON.stringify({ error: "Invalid public key" }), { status: 400 });
   }
 
-  const chains = includeTestnets ? [...MAINNET_CHAINS, TESTNET_CHAINS] : MAINNET_CHAINS;
+  const chains: ChainDefinition[] = includeTestnets ? [...MAINNET_CHAINS, ...TESTNET_CHAINS] : MAINNET_CHAINS;
   const lookups = await Promise.all(chains.map(chain => lookupNetwork(publicKey, chain)));
 
   const networkAccounts = lookups.map(({ chain, accounts }) => ({
@@ -53,9 +53,9 @@ const accountLookup = async (req: Request) => {
   return new Response(JSON.stringify(networkAccounts));
 };
 
-const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition) => {
+export const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
   try {
-    const accounts = await chainLookup(publicKey, chain);
+    const accounts = await chainLookup(publicKey, chain, apiClient);
     return { chain, accounts };
   } catch (error) {
     console.warn(`Lookup error on ${chain.name}: ${error}`);
@@ -63,8 +63,8 @@ const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition) => {
   }
 };
 
-const chainLookup = async (publicKey: PublicKey, chain: ChainDefinition) => {
-  const client = new APIClient(chain);
+export const chainLookup = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
+  const client = apiClient || new APIClient(chain);
   const response = await client.v1.chain.get_accounts_by_authorizers({ keys: [publicKey] });
   return response.accounts.map((account: any) => ({
     accountName: account.account_name,

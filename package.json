@@ -1,5 +1,26 @@
-{ "dependencies": { "@wharfkit/antelope": "^1.0.7", "@wharfkit/common": "^1.2.2" }, "name": "lighthouse-node", "module": "index.ts", "type": "module", "devDependencies": {
-  "@types/bun": "latest"
-}, "peerDependencies": {
-  "typescript": "^5.0.0"
-} }
+{
+	"name": "lighthouse",
+	"module": "src/index.ts",
+	"type": "module",
+	"scripts": {
+		"start": "bun src/index.ts",
+		"build": "bun build src/index.ts --compile",
+		"dev": "bun --hot src/index.ts"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"overrides": {
+		"@wharfkit/antelope": "^1.0.7"
+	},
+	"dependencies": {
+		"@wharfkit/antelope": "^1.0.7",
+		"@wharfkit/common": "^1.2.2",
+		"bun-types": "latest",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^9.1.0",
+	},
+	"devDependencies": {
+		"@types/bun": "^1.0.8"
+	}
+}
