@@ -1,5 +1,5 @@
 import {serve} from 'bun'
-import {API, APIClient, PublicKey} from '@wharfkit/antelope'
+import {API, APIClient, type PermissionLevelType, PublicKey} from '@wharfkit/antelope'
 import {MAINNET_CHAINS, TESTNET_CHAINS} from './chains'
 import type {Chain} from './types'
 
@@ -29,9 +29,6 @@ export const accountLookup = async (req: Request) => {
 		accounts,
 	}))
 
-	const totalAccounts = networkAccounts.reduce((total, {accounts}) => total + accounts.length, 0)
-	log(`Found ${totalAccounts} auth(s) across ${networkAccounts.length} network(s)`)
-
 	return new Response(JSON.stringify(networkAccounts))
 }
 
@@ -45,16 +42,32 @@ export const lookupNetwork = async (publicKey: PublicKey, chain: Chain, apiClien
 	}
 }
 
-const networkRequest = async (publicKey: PublicKey, chain: Chain, apiClient?: APIClient) => {
-	const client = apiClient || new APIClient(chain)
-	const response: API.v1.AccountsByAuthorizers =
-		await client.v1.chain.get_accounts_by_authorizers({
-			keys: [publicKey],
-		})
-	return response.accounts.map((account) => ({
-		actor: account.account_name,
-		permission: account.permission_name,
-	}))
+const networkRequest = (
+	publicKey: PublicKey,
+	chain: Chain,
+	apiClient?: APIClient
+): Promise<PermissionLevelType[]> => {
+	return new Promise((resolve, reject) => {
+		const client = apiClient || new APIClient(chain)
+		client.v1.chain
+			.get_accounts_by_authorizers({
+				keys: [publicKey],
+			})
+			.then((response: API.v1.AccountsByAuthorizers) => {
+				resolve(
+					response.accounts.map((account) => ({
+						actor: account.account_name,
+						permission: account.permission_name,
+					}))
+				)
+			})
+			.catch((error) => {
+				reject(error)
+			})
+		setTimeout(() => {
+			reject('Request timed out.')
+		}, 600)
+	})
 }
 
 function log(message: string) {
