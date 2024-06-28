@@ -66,7 +66,7 @@ const networkRequest = (
 			})
 		setTimeout(() => {
 			reject('Request timed out.')
-		}, 600)
+		}, 1000)
 	})
 }
 
