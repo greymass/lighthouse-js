@@ -1,29 +1,6 @@
 import { serve } from "bun";
 import { APIClient, PublicKey } from "@wharfkit/antelope";
-import { ChainDefinition, Chains } from "@wharfkit/common";
-
-const MAINNET_CHAINS = [
-    Chains.EOS,
-    Chains.Telos,
-    Chains.WAX,
-    Chains.Proton,
-    Chains.Libre,
-    Chains.UX,
-    Chains.FIO,
-    // Chains.Ayetu,
-    // Chains.KOY,
-];
-
-const TESTNET_CHAINS = [
-    Chains.TelosTestnet,
-    Chains.WAXTestnet,
-    Chains.ProtonTestnet,
-    Chains.LibreTestnet,
-    Chains.FIOTestnet,
-    // Chains.UXTestnet,
-    // Chains.AyetuTestnet,
-    // Chains.KOYTestnet,
-];
+import { MAINNET_CHAINS, TESTNET_CHAINS, type Chain } from "./chains";
 
 export const accountLookup = async (req: Request) => {
   const url = new URL(req.url);
@@ -38,8 +15,8 @@ export const accountLookup = async (req: Request) => {
     return new Response(JSON.stringify({ error: "Invalid public key" }), { status: 400 });
   }
 
-  const chains: ChainDefinition[] = includeTestnets ? [...MAINNET_CHAINS, ...TESTNET_CHAINS] : MAINNET_CHAINS;
-  const lookups = await Promise.all(chains.map(chain => lookupNetwork(publicKey, chain)));
+  const chains: Chain[] = includeTestnets ? [...MAINNET_CHAINS, ...TESTNET_CHAINS] : MAINNET_CHAINS;
+  const lookups = (await Promise.all(chains.map(chain => lookupNetwork(publicKey, chain)))).filter(({ accounts }) => accounts.length > 0)
 
   const networkAccounts = lookups.map(({ chain, accounts }) => ({
     network: chain.name,
@@ -53,7 +30,7 @@ export const accountLookup = async (req: Request) => {
   return new Response(JSON.stringify(networkAccounts));
 };
 
-export const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
+export const lookupNetwork = async (publicKey: PublicKey, chain: Chain, apiClient?: APIClient) => {
   try {
     const accounts = await networkRequest(publicKey, chain, apiClient);
     return { chain, accounts };
@@ -63,12 +40,12 @@ export const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition
   }
 };
 
-const networkRequest = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
+const networkRequest = async (publicKey: PublicKey, chain: Chain, apiClient?: APIClient) => {
   const client = apiClient || new APIClient(chain);
   const response = await client.v1.chain.get_accounts_by_authorizers({ keys: [publicKey] });
   return response.accounts.map((account: any) => ({
-    accountName: account.account_name,
-    permissionName: account.permission_name,
+    actor: account.account_name,
+    permission: account.permission_name,
   }));
 };
 
@@ -83,3 +60,5 @@ serve({
   },
   port: 3000,
 });
+
+console.log('Server running at http://localhost:3000/ 🚀')

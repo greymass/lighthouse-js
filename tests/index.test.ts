@@ -12,13 +12,13 @@ const mockClient = makeClient('https://jungle4.greymass.com');
 
 describe("accountLookup", () => {
   it("should handle case where bad public key is provided", async () => {
-    const req = new Request(`https://lighthouse.greymass.com/lookup/${BAD_PUBLIC_KEY}`);
+    const req = new Request(`https://eosio.greymass.com/lookup/${BAD_PUBLIC_KEY}`);
     const result = await accountLookup(req);
     assert.equal(result.status, 400);
   })
 
   it("should handle case where no public key is provided", async () => {
-    const req = new Request(`https://lighthouse.greymass.com/lookup/`);
+    const req = new Request(`https://eosio.greymass.com/lookup/`);
     const result = await accountLookup(req);
     assert.equal(result.status, 400);
   })
@@ -27,20 +27,30 @@ describe("accountLookup", () => {
 describe("lookupNetwork", () => {
   it("should handle network lookup", async () => {
     const publicKey = PublicKey.from(PUBLIC_KEY);
-    const chain = Chains.EOS;
+    const chain = Chains.Jungle4;
     
-    const result = await lookupNetwork(publicKey, chain, mockClient);
+    const result = await lookupNetwork(publicKey, Chains.Jungle4, mockClient);
     assert.containsAllKeys(result, ['chain', 'accounts']);
     assert.equal(result.chain.name, chain.name);
     assert.equal(result.accounts.length, 2);
-    assert.deepEqual(String(result.accounts[0].accountName), "testerman123");
+    assert.deepEqual(String(result.accounts[0].actor), "testerman123");
   });
 
   it("should handle network lookup with non existent public key", async () => {
     const publicKey = PublicKey.from(NON_EXISTENT_PUBLIC_KEY);
-    const chain = Chains.EOS;
+    const chain = Chains.Jungle4;
     
     const result = await lookupNetwork(publicKey, chain, mockClient);
+    assert.containsAllKeys(result, ['chain', 'accounts']);
+    assert.equal(result.chain.name, chain.name);
+    assert.equal(result.accounts.length, 0);
+  });
+
+  it("should handle network lookup error", async () => {
+    const publicKey = PublicKey.from(PUBLIC_KEY);
+    const chain = Chains.Jungle4;
+    
+    const result = await lookupNetwork(publicKey, chain, makeClient('https://jungle0.greymass.com'));
     assert.containsAllKeys(result, ['chain', 'accounts']);
     assert.equal(result.chain.name, chain.name);
     assert.equal(result.accounts.length, 0);

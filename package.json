@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "bun src/index.ts",
-		"build": "bun build src/index.ts --compile --outfile lighthouse",
+		"build": "bun build src/index.ts --compile --outfile dist/lighthouse",
 		"dev": "bun --hot src/index.ts"
 	},
 	"peerDependencies": {
