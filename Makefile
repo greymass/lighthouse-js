@@ -6,9 +6,13 @@ BIN := ./node_modules/.bin
 dev:
 	bun run --watch src/index.ts
 
+.PHONY: build
+build: node_modules
+	bun run build
+
 .PHONY: test
-test: build node_modules build/drops.ts build/epoch.drops.ts init/codegen
-	bun test
+test: build node_modules
+	MOCK_DIR="tests/data/requests" bun test
 
 .PHONY: check
 check: node_modules

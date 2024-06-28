@@ -55,7 +55,7 @@ export const accountLookup = async (req: Request) => {
 
 export const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
   try {
-    const accounts = await chainLookup(publicKey, chain, apiClient);
+    const accounts = await networkRequest(publicKey, chain, apiClient);
     return { chain, accounts };
   } catch (error) {
     console.warn(`Lookup error on ${chain.name}: ${error}`);
@@ -63,7 +63,7 @@ export const lookupNetwork = async (publicKey: PublicKey, chain: ChainDefinition
   }
 };
 
-export const chainLookup = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
+const networkRequest = async (publicKey: PublicKey, chain: ChainDefinition, apiClient?: APIClient) => {
   const client = apiClient || new APIClient(chain);
   const response = await client.v1.chain.get_accounts_by_authorizers({ keys: [publicKey] });
   return response.accounts.map((account: any) => ({

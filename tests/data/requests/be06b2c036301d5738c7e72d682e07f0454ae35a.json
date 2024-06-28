@@ -1,0 +1,15 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/get_accounts_by_authorizers",
+        "params": {
+            "method": "POST",
+            "body": "{\"keys\":[\"PUB_K1_8hiZaTNknE75KH2UmBNqcVFN4u3vgJ8PcytevjygaJ6aBNaT59\"]}",
+            "headers": {}
+        }
+    },
+    "status": 200,
+    "json": {
+        "accounts": []
+    },
+    "text": "{\"accounts\":[]}"
+}

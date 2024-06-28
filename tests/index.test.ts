@@ -1,78 +1,48 @@
 import { assert } from 'chai';
-import sinon from 'sinon';
 import { PublicKey } from "@wharfkit/antelope";
 import { Chains } from "@wharfkit/common";
-import { accountLookup, lookupNetwork, chainLookup } from '../src/index';
+import { lookupNetwork, accountLookup } from '../src/index';
 import { makeClient } from '@wharfkit/mock-data';
 
-const TEST_PUBLIC_KEY = 'EOS6KybFkAb54UMSvHoj4BMGTKPd21GEw3HUCoB5uc1vabr63qYrV'
+const PUBLIC_KEY = 'EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf'
+const NON_EXISTENT_PUBLIC_KEY = 'EOS8hiZaTNknE75KH2UmBNqcVFN4u3vgJ8PcytevjygaJ6aGWfb7U'
+const BAD_PUBLIC_KEY = 'EOS6KybFkAb54UMSvHoj4BMGTKPd21GEw3HUCoB5uc1vabasasqYrV'
 
 const mockClient = makeClient('https://jungle4.greymass.com');
 
 describe("accountLookup", () => {
-  let lookupNetworkStub: sinon.SinonStub;
+  it("should handle case where bad public key is provided", async () => {
+    const req = new Request(`https://lighthouse.greymass.com/lookup/${BAD_PUBLIC_KEY}`);
+    const result = await accountLookup(req);
+    assert.equal(result.status, 400);
+  })
 
-  beforeEach(() => {
-    lookupNetworkStub = sinon.stub(global, 'lookupNetwork');
-  });
-
-  afterEach(() => {
-    lookupNetworkStub.restore();
-  });
-
-  it("should return 400 for invalid public key", async () => {
-    const req = new Request("http://localhost/lookup/invalidKey");
-    const res = await accountLookup(req);
-    assert.equal(res.status, 400);
-    const json = await res.json();
-    assert.equal(json.error, "Invalid public key");
-  });
-
-  it("should lookup accounts for a valid public key with mocked lookupNetwork", async () => {
-    const mockResult = {
-      chain: Chains.EOS,
-      accounts: [
-        {
-          accountName: 'mockaccount',
-          permissionName: 'active',
-        }
-      ]
-    };
-
-    lookupNetworkStub.resolves(mockResult);
-
-    const req = new Request(`http://localhost/lookup/${TEST_PUBLIC_KEY}`);
-    const res = await accountLookup(req);
-    
-    assert.equal(res.status, 200);
-    const json = await res.json();
-    assert.isArray(json);
-    assert.lengthOf(json, 1);
-    assert.deepEqual(json[0].accounts[0], { accountName: 'mockaccount', permissionName: 'active' });
-  });
+  it("should handle case where no public key is provided", async () => {
+    const req = new Request(`https://lighthouse.greymass.com/lookup/`);
+    const result = await accountLookup(req);
+    assert.equal(result.status, 400);
+  })
 });
 
 describe("lookupNetwork", () => {
   it("should handle network lookup", async () => {
-    const publicKey = PublicKey.from(TEST_PUBLIC_KEY);
+    const publicKey = PublicKey.from(PUBLIC_KEY);
     const chain = Chains.EOS;
     
     const result = await lookupNetwork(publicKey, chain, mockClient);
     assert.containsAllKeys(result, ['chain', 'accounts']);
     assert.equal(result.chain.name, chain.name);
-    assert.isArray(result.accounts);
+    assert.equal(result.accounts.length, 2);
+    assert.deepEqual(String(result.accounts[0].accountName), "testerman123");
   });
-});
 
-describe("chainLookup", () => {
-  it("should lookup accounts on the chain", async () => {
-    const publicKey = PublicKey.from(TEST_PUBLIC_KEY);
+  it("should handle network lookup with non existent public key", async () => {
+    const publicKey = PublicKey.from(NON_EXISTENT_PUBLIC_KEY);
     const chain = Chains.EOS;
-
-    const accounts = await chainLookup(publicKey, chain, mockClient);
-    assert.isArray(accounts);
-    accounts.forEach(account => {
-      assert.containsAllKeys(account, ['accountName', 'permissionName']);
-    });
+    
+    const result = await lookupNetwork(publicKey, chain, mockClient);
+    assert.containsAllKeys(result, ['chain', 'accounts']);
+    assert.equal(result.chain.name, chain.name);
+    assert.equal(result.accounts.length, 0);
   });
 });
