@@ -19,8 +19,6 @@ export const GET = async ({params, url, fetch}: RequestEvent) => {
 			? [...MAINNET_CHAINS, ...TESTNET_CHAINS]
 			: MAINNET_CHAINS
 
-		console.log({fetch})
-
 		const lookups = (
 			await Promise.all(
 				chains.map((chain) =>
