@@ -11,6 +11,8 @@ export const networkRequest = (
 ): Promise<PermissionLevelType[]> => {
 	return new Promise((resolve, reject) => {
 		const client = apiClient || new APIClient(chain)
+
+		console.log({client})
 		const timeoutId = setTimeout(() => {
 			reject(new Error('Request timed out.'))
 		}, 1000)
@@ -40,6 +42,7 @@ export const lookupNetwork = async (publicKey: PublicKey, chain: Chain, apiClien
 		const accounts = await networkRequest(publicKey, chain, apiClient)
 		return {chain, accounts}
 	} catch (error) {
+		console.log({error})
 		logger.warn(`Lookup error on ${chain.name}: ${error}`)
 		return {chain, accounts: [], error: `Lookup error: ${error}`}
 	}

@@ -19,6 +19,8 @@ export const GET = async ({params, url, fetch}: RequestEvent) => {
 			? [...MAINNET_CHAINS, ...TESTNET_CHAINS]
 			: MAINNET_CHAINS
 
+		console.log({fetch})
+
 		const lookups = (
 			await Promise.all(
 				chains.map((chain) =>
@@ -26,7 +28,7 @@ export const GET = async ({params, url, fetch}: RequestEvent) => {
 						key,
 						chain,
 						new APIClient({
-							url: 'https://api.eosnetwork.com',
+							url: chain.url,
 							fetch,
 						})
 					)
