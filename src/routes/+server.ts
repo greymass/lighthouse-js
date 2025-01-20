@@ -1,7 +1,6 @@
 import {json} from '@sveltejs/kit'
-import type {RequestEvent} from '@sveltejs/kit'
 
-export const GET = async ({}: RequestEvent) => {
+export const GET = async () => {
 	return json({
 		message: '💡🏠 Lighthouse API',
 		endpoints: {

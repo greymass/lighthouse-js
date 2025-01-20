@@ -1,6 +1,8 @@
-import {APIClient, API, PublicKey} from '@wharfkit/antelope'
+import {APIClient} from '@wharfkit/antelope'
+import type {API, PublicKey} from '@wharfkit/antelope'
 import type {PermissionLevelType} from '@wharfkit/antelope'
 import type {Chain} from './chains'
+import {logger} from './utils/logger'
 
 export const networkRequest = (
 	publicKey: PublicKey,
@@ -38,7 +40,7 @@ export const lookupNetwork = async (publicKey: PublicKey, chain: Chain, apiClien
 		const accounts = await networkRequest(publicKey, chain, apiClient)
 		return {chain, accounts}
 	} catch (error) {
-		console.warn(`Lookup error on ${chain.name}: ${error}`)
-		return {chain, accounts: []}
+		logger.warn(`Lookup error on ${chain.name}: ${error}`)
+		return {chain, accounts: [], error: `Lookup error: ${error}`}
 	}
 }

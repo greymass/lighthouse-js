@@ -42,7 +42,8 @@ export const GET = async ({params, url, fetch}: RequestEvent) => {
 
 		return json(networkAccounts)
 	} catch (err) {
-		console.error(err)
-		throw error(400, {message: 'Invalid public key'})
+		// Handle both invalid public key format and lookup errors
+		const message = err instanceof Error ? err.message : 'Invalid public key'
+		throw error(400, {message})
 	}
 }

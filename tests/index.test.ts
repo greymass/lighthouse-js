@@ -6,7 +6,6 @@ import {makeClient} from '@wharfkit/mock-data'
 
 const PUBLIC_KEY = 'EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf'
 const NON_EXISTENT_PUBLIC_KEY = 'EOS8hiZaTNknE75KH2UmBNqcVFN4u3vgJ8PcytevjygaJ6aGWfb7U'
-const BAD_PUBLIC_KEY = 'EOS6KybFkAb54UMSvHoj4BMGTKPd21GEw3HUCoB5uc1vabasasqYrV'
 
 const mockClient = makeClient('https://jungle4.greymass.com')
 
