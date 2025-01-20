@@ -1,0 +1,30 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/get_accounts_by_authorizers",
+        "params": {
+            "method": "POST",
+            "body": "{\"keys\":[\"PUB_K1_65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCZhX7vh\"]}",
+            "headers": {}
+        }
+    },
+    "status": 200,
+    "json": {
+        "accounts": [
+            {
+                "account_name": "testerman123",
+                "permission_name": "owner",
+                "authorizing_key": "EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf",
+                "weight": 1,
+                "threshold": 1
+            },
+            {
+                "account_name": "testerman123",
+                "permission_name": "active",
+                "authorizing_key": "EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf",
+                "weight": 1,
+                "threshold": 1
+            }
+        ]
+    },
+    "text": "{\"accounts\":[{\"account_name\":\"testerman123\",\"permission_name\":\"owner\",\"authorizing_key\":\"EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf\",\"weight\":1,\"threshold\":1},{\"account_name\":\"testerman123\",\"permission_name\":\"active\",\"authorizing_key\":\"EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf\",\"weight\":1,\"threshold\":1}]}"
+}
