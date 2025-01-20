@@ -1,11 +1,11 @@
-import {PublicKey} from '@wharfkit/antelope'
+import {APIClient, PublicKey} from '@wharfkit/antelope'
 import {MAINNET_CHAINS, TESTNET_CHAINS} from '$lib/chains'
 import type {Chain} from '$lib/types'
 import type {RequestEvent} from '@sveltejs/kit'
 import {error, json} from '@sveltejs/kit'
 import {lookupNetwork} from '$lib/lookup'
 
-export const GET = async ({params, url}: RequestEvent) => {
+export const GET = async ({params, url, fetch}: RequestEvent) => {
 	const {publicKey} = params
 	const includeTestnets = url.searchParams.get('includeTestnets') === 'true'
 
@@ -20,7 +20,18 @@ export const GET = async ({params, url}: RequestEvent) => {
 			: MAINNET_CHAINS
 
 		const lookups = (
-			await Promise.all(chains.map((chain) => lookupNetwork(key, chain)))
+			await Promise.all(
+				chains.map((chain) =>
+					lookupNetwork(
+						key,
+						chain,
+						new APIClient({
+							url: 'https://api.eosnetwork.com',
+							fetch,
+						})
+					)
+				)
+			)
 		).filter(({accounts}) => accounts.length > 0)
 
 		const networkAccounts = lookups.map(({chain, accounts}) => ({
