@@ -1,38 +1,62 @@
-# sv
+# Lighthouse JS
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A fast and efficient service for looking up Antelope accounts across multiple networks using public keys. This service helps you discover which accounts are associated with a specific public key across various Antelope-based blockchains.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Look up accounts by public key across multiple Antelope networks
+- Support for both mainnet and testnet chains
+- Fast parallel lookups
+- Simple REST API interface
 
-```bash
-# create a new project in the current directory
-npx sv create
+## API Usage
 
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Lookup Accounts by Public Key
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+GET /lookup/{publicKey}
 ```
 
-## Building
+Query Parameters:
+- `includeTestnets` (optional): Set to 'true' to include testnet chains in the lookup
 
-To create a production version of your app:
+Example Response:
+```json
+[
+  {
+    "network": "EOS",
+    "chainId": "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
+    "accounts": ["account1", "account2"]
+  },
+  {
+    "network": "WAX",
+    "chainId": "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4",
+    "accounts": ["account3"]
+  }
+]
+```
 
+## Development
+
+1. Install dependencies:
 ```bash
-npm run build
+bun install
 ```
 
-You can preview the production build with `npm run preview`.
+2. Start the development server:
+```bash
+bun dev
+```
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+3. Run tests:
+```bash
+bun test
+```
+
+## License
+
+MIT License
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
