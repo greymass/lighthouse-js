@@ -4,7 +4,7 @@ BIN := ./node_modules/.bin
 
 .PHONY: dev
 dev:
-	bun run --watch src/index.ts
+	bun dev
 
 .PHONY: build
 build: node_modules

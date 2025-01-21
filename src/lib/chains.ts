@@ -1,5 +1,15 @@
 import {Chains} from '@wharfkit/common'
 
+import type {ChainDefinition} from '@wharfkit/common'
+
+export type Chain =
+	| ChainDefinition
+	| {
+			id: string
+			name: string
+			url: string
+	  }
+
 const AYETU_MAINNET = {
 	id: '9b06067cf9f0a293e854cbdbcf4bc0292bbf1137dd01d3d9300f403706444504',
 	name: 'Ayetu',
@@ -24,7 +34,7 @@ const KOY_TESTNET = {
 	url: 'https://api.testnet.koynetwork.io',
 }
 
-export const MAINNET_CHAINS = [
+export const MAINNET_CHAINS: Chain[] = [
 	Chains.EOS,
 	Chains.Telos,
 	Chains.WAX,
@@ -36,7 +46,7 @@ export const MAINNET_CHAINS = [
 	KOY_MAINNET,
 ]
 
-export const TESTNET_CHAINS = [
+export const TESTNET_CHAINS: Chain[] = [
 	Chains.TelosTestnet,
 	Chains.WAXTestnet,
 	Chains.LibreTestnet,
