@@ -7,7 +7,8 @@ import {lookupNetwork} from '$lib/lookup'
 
 export const GET = async ({params, url, fetch}: RequestEvent) => {
 	const {publicKey} = params
-	const includeTestnets = url.searchParams.get('includeTestnets') === 'true'
+	const testnetParam = url.searchParams.get('includeTestnets')
+	const includeTestnets = testnetParam !== null && testnetParam !== 'false'
 
 	if (!publicKey) {
 		throw error(400, {message: 'Public key is required'})
