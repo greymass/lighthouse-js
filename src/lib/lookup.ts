@@ -14,7 +14,7 @@ export const networkRequest = (
 
 		const timeoutId = setTimeout(() => {
 			reject(new Error('Request timed out.'))
-		}, 1000)
+		}, 5000)
 
 		client.v1.chain
 			.get_accounts_by_authorizers({
