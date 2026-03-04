@@ -44,4 +44,42 @@ describe('lookupNetwork', () => {
 		assert.equal(result.chain.name, chain.name)
 		assert.equal(result.accounts.length, 0)
 	})
+
+	it('should fallback to history lookup when chain lookup fails', async () => {
+		const publicKey = PublicKey.from(PUBLIC_KEY)
+		const chain = Chains.Jungle4
+
+		const stubClient = {
+			v1: {
+				chain: {
+					get_accounts_by_authorizers: async () => {
+						throw new Error('chain lookup unavailable')
+					},
+					get_account: async (accountName: string) => ({
+						account_name: accountName,
+						permissions: [
+							{
+								perm_name: 'active',
+								required_auth: {
+									keys: [{key: publicKey}],
+								},
+							},
+						],
+					}),
+				},
+				history: {
+					get_key_accounts: async () => ({
+						account_names: ['fallbackacct12'],
+					}),
+				},
+			},
+		} as any
+
+		const result = await lookupNetwork(publicKey, chain, stubClient)
+		assert.containsAllKeys(result, ['chain', 'accounts'])
+		assert.equal(result.chain.name, chain.name)
+		assert.equal(result.accounts.length, 1)
+		assert.deepEqual(String(result.accounts[0].actor), 'fallbackacct12')
+		assert.deepEqual(String(result.accounts[0].permission), 'active')
+	})
 })
