@@ -26,7 +26,8 @@ const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number): Promise<T
 	}
 }
 
-const chainLookupSupport = (chain: Chain): boolean => !CHAIN_LOOKUP_UNSUPPORTED.has(String(chain.id))
+const chainLookupSupport = (chain: Chain): boolean =>
+	!CHAIN_LOOKUP_UNSUPPORTED.has(String(chain.id))
 
 const chainLookup = async (
 	publicKey: PublicKey,
@@ -79,7 +80,9 @@ const historyLookup = async (
 
 		for (const permission of account.permissions) {
 			const keys = permission.required_auth?.keys || []
-			const hasPermission = keys.some((keyPermission) => String(keyPermission.key) === targetKey)
+			const hasPermission = keys.some(
+				(keyPermission) => String(keyPermission.key) === targetKey
+			)
 			if (hasPermission) {
 				accounts.push({
 					actor: account.account_name,
@@ -92,29 +95,22 @@ const historyLookup = async (
 	return accounts
 }
 
-export const networkRequest = (
+export const networkRequest = async (
 	publicKey: PublicKey,
 	chain: Chain,
 	apiClient?: APIClient
 ): Promise<PermissionLevelType[]> => {
-	return new Promise(async (resolve, reject) => {
+	if (chainLookupSupport(chain)) {
 		try {
-			if (chainLookupSupport(chain)) {
-				try {
-					resolve(await chainLookup(publicKey, chain, apiClient))
-					return
-				} catch (error) {
-					logger.warn(
-						`Chain lookup error on ${chain.name}: ${error}, falling back to history API`
-					)
-				}
-			}
-
-			resolve(await historyLookup(publicKey, chain, apiClient))
+			return await chainLookup(publicKey, chain, apiClient)
 		} catch (error) {
-			reject(error)
+			logger.warn(
+				`Chain lookup error on ${chain.name}: ${error}, falling back to history API`
+			)
 		}
-	})
+	}
+
+	return await historyLookup(publicKey, chain, apiClient)
 }
 
 export const lookupNetwork = async (publicKey: PublicKey, chain: Chain, apiClient?: APIClient) => {
