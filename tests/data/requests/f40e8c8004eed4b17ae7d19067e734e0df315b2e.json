@@ -1,0 +1,107 @@
+{
+    "request": {
+        "path": "https://jungle0.greymass.com/v1/chain/get_account",
+        "params": {
+            "method": "POST",
+            "body": "{\"account_name\":\"testerman123\"}",
+            "headers": {}
+        }
+    },
+    "status": 200,
+    "json": {
+        "account_name": "testerman123",
+        "head_block_num": 253851242,
+        "head_block_time": "2026-03-06T07:58:06.000",
+        "privileged": false,
+        "last_code_update": "1970-01-01T00:00:00.000",
+        "created": "2023-10-17T06:01:05.500",
+        "core_liquid_balance": "89.3921 EOS",
+        "ram_quota": 5495,
+        "net_weight": 10000,
+        "cpu_weight": 10000,
+        "net_limit": {
+            "used": 137,
+            "available": 15278,
+            "max": 15415,
+            "last_usage_update_time": "2025-12-19T07:52:37.500",
+            "current_used": 0
+        },
+        "cpu_limit": {
+            "used": 455,
+            "available": 2411,
+            "max": 2866,
+            "last_usage_update_time": "2025-12-19T07:52:37.500",
+            "current_used": 0
+        },
+        "ram_usage": 4291,
+        "permissions": [
+            {
+                "perm_name": "active",
+                "parent": "owner",
+                "required_auth": {
+                    "threshold": 1,
+                    "keys": [
+                        {
+                            "key": "EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf",
+                            "weight": 1
+                        }
+                    ],
+                    "accounts": [],
+                    "waits": []
+                },
+                "linked_actions": []
+            },
+            {
+                "perm_name": "owner",
+                "parent": "",
+                "required_auth": {
+                    "threshold": 1,
+                    "keys": [
+                        {
+                            "key": "EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf",
+                            "weight": 1
+                        }
+                    ],
+                    "accounts": [],
+                    "waits": []
+                },
+                "linked_actions": []
+            }
+        ],
+        "total_resources": {
+            "owner": "testerman123",
+            "net_weight": "1.0000 EOS",
+            "cpu_weight": "1.0000 EOS",
+            "ram_bytes": 4095
+        },
+        "self_delegated_bandwidth": {
+            "from": "testerman123",
+            "to": "testerman123",
+            "net_weight": "1.0000 EOS",
+            "cpu_weight": "1.0000 EOS"
+        },
+        "refund_request": null,
+        "voter_info": {
+            "owner": "testerman123",
+            "proxy": "",
+            "producers": [],
+            "staked": 220000,
+            "last_vote_weight": "0.00000000000000000",
+            "proxied_vote_weight": "0.00000000000000000",
+            "is_proxy": 0,
+            "flags1": 0,
+            "reserved2": 0,
+            "reserved3": "0 "
+        },
+        "rex_info": null,
+        "subjective_cpu_bill_limit": {
+            "used": 0,
+            "available": 0,
+            "max": 0,
+            "last_usage_update_time": "2000-01-01T00:00:00.000",
+            "current_used": 0
+        },
+        "eosio_any_linked_actions": []
+    },
+    "text": "{\"account_name\":\"testerman123\",\"head_block_num\":253851242,\"head_block_time\":\"2026-03-06T07:58:06.000\",\"privileged\":false,\"last_code_update\":\"1970-01-01T00:00:00.000\",\"created\":\"2023-10-17T06:01:05.500\",\"core_liquid_balance\":\"89.3921 EOS\",\"ram_quota\":5495,\"net_weight\":10000,\"cpu_weight\":10000,\"net_limit\":{\"used\":137,\"available\":15278,\"max\":15415,\"last_usage_update_time\":\"2025-12-19T07:52:37.500\",\"current_used\":0},\"cpu_limit\":{\"used\":455,\"available\":2411,\"max\":2866,\"last_usage_update_time\":\"2025-12-19T07:52:37.500\",\"current_used\":0},\"ram_usage\":4291,\"permissions\":[{\"perm_name\":\"active\",\"parent\":\"owner\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[]},{\"perm_name\":\"owner\",\"parent\":\"\",\"required_auth\":{\"threshold\":1,\"keys\":[{\"key\":\"EOS65BFgzcH8uZW837HqadGcREfNViBV6Fqc1LsmwcWdfUCayHQzf\",\"weight\":1}],\"accounts\":[],\"waits\":[]},\"linked_actions\":[]}],\"total_resources\":{\"owner\":\"testerman123\",\"net_weight\":\"1.0000 EOS\",\"cpu_weight\":\"1.0000 EOS\",\"ram_bytes\":4095},\"self_delegated_bandwidth\":{\"from\":\"testerman123\",\"to\":\"testerman123\",\"net_weight\":\"1.0000 EOS\",\"cpu_weight\":\"1.0000 EOS\"},\"refund_request\":null,\"voter_info\":{\"owner\":\"testerman123\",\"proxy\":\"\",\"producers\":[],\"staked\":220000,\"last_vote_weight\":\"0.00000000000000000\",\"proxied_vote_weight\":\"0.00000000000000000\",\"is_proxy\":0,\"flags1\":0,\"reserved2\":0,\"reserved3\":\"0 \"},\"rex_info\":null,\"subjective_cpu_bill_limit\":{\"used\":0,\"available\":0,\"max\":0,\"last_usage_update_time\":\"2000-01-01T00:00:00.000\",\"current_used\":0},\"eosio_any_linked_actions\":[]}"
+}

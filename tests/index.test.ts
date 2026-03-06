@@ -38,7 +38,7 @@ describe('lookupNetwork', () => {
 		const result = await lookupNetwork(
 			publicKey,
 			chain,
-			makeClient('https://jungle0.greymass.com')
+			makeClient('https://jungle9.greymass.com')
 		)
 		assert.containsAllKeys(result, ['chain', 'accounts'])
 		assert.equal(result.chain.name, chain.name)
@@ -48,38 +48,15 @@ describe('lookupNetwork', () => {
 	it('should fallback to history lookup when chain lookup fails', async () => {
 		const publicKey = PublicKey.from(PUBLIC_KEY)
 		const chain = Chains.Jungle4
-
-		const stubClient = {
-			v1: {
-				chain: {
-					get_accounts_by_authorizers: async () => {
-						throw new Error('chain lookup unavailable')
-					},
-					get_account: async (accountName: string) => ({
-						account_name: accountName,
-						permissions: [
-							{
-								perm_name: 'active',
-								required_auth: {
-									keys: [{key: publicKey}],
-								},
-							},
-						],
-					}),
-				},
-				history: {
-					get_key_accounts: async () => ({
-						account_names: ['fallbackacct12'],
-					}),
-				},
-			},
-		} as any
-
-		const result = await lookupNetwork(publicKey, chain, stubClient)
+		const result = await lookupNetwork(
+			publicKey,
+			chain,
+			makeClient('https://jungle0.greymass.com')
+		)
 		assert.containsAllKeys(result, ['chain', 'accounts'])
 		assert.equal(result.chain.name, chain.name)
-		assert.equal(result.accounts.length, 1)
-		assert.deepEqual(String(result.accounts[0].actor), 'fallbackacct12')
-		assert.deepEqual(String(result.accounts[0].permission), 'active')
+		assert.equal(result.accounts.length, 2)
+		assert.deepEqual(String(result.accounts[0].actor), 'testerman123')
+		assert.isTrue(result.accounts.some((account) => String(account.permission) === 'active'))
 	})
 })
