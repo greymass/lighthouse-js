@@ -38,7 +38,7 @@ describe('lookupNetwork', () => {
 		const result = await lookupNetwork(
 			publicKey,
 			chain,
-			makeClient('https://jungle0.greymass.com')
+			makeClient('https://jungle9.greymass.com')
 		)
 		assert.containsAllKeys(result, ['chain', 'accounts'])
 		assert.equal(result.chain.name, chain.name)
