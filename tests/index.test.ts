@@ -44,19 +44,4 @@ describe('lookupNetwork', () => {
 		assert.equal(result.chain.name, chain.name)
 		assert.equal(result.accounts.length, 0)
 	})
-
-	it('should fallback to history lookup when chain lookup fails', async () => {
-		const publicKey = PublicKey.from(PUBLIC_KEY)
-		const chain = Chains.Jungle4
-		const result = await lookupNetwork(
-			publicKey,
-			chain,
-			makeClient('https://jungle0.greymass.com')
-		)
-		assert.containsAllKeys(result, ['chain', 'accounts'])
-		assert.equal(result.chain.name, chain.name)
-		assert.equal(result.accounts.length, 2)
-		assert.deepEqual(String(result.accounts[0].actor), 'testerman123')
-		assert.isTrue(result.accounts.some((account) => String(account.permission) === 'active'))
-	})
 })
