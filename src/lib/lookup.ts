@@ -9,6 +9,11 @@ const CHAIN_LOOKUP_UNSUPPORTED = new Set([
 	'b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e',
 ])
 
+// Keep timeout behavior aligned with the Swift Lighthouse implementation.
+const CHAIN_LOOKUP_TIMEOUT_MS = 2000
+const HISTORY_KEY_ACCOUNTS_TIMEOUT_MS = 5000
+const HISTORY_GET_ACCOUNT_TIMEOUT_MS = 5000
+
 const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
 	let timeoutId: ReturnType<typeof setTimeout> | undefined
 	const timeoutPromise = new Promise<T>((_resolve, reject) => {
@@ -39,7 +44,7 @@ const chainLookup = async (
 		client.v1.chain.get_accounts_by_authorizers({
 			keys: [publicKey],
 		}),
-		2000
+		CHAIN_LOOKUP_TIMEOUT_MS
 	)
 
 	return response.accounts.map((account) => ({
@@ -58,7 +63,7 @@ const historyLookup = async (
 
 	const keyAccountsResponse = await withTimeout(
 		client.v1.history.get_key_accounts(publicKey),
-		5000
+		HISTORY_KEY_ACCOUNTS_TIMEOUT_MS
 	)
 
 	const accountNames =
@@ -68,7 +73,10 @@ const historyLookup = async (
 
 	const resolved = await Promise.all(
 		accountNames.map((accountName) =>
-			withTimeout(client.v1.chain.get_account(accountName), 5000).catch(() => null)
+			withTimeout(
+				client.v1.chain.get_account(accountName),
+				HISTORY_GET_ACCOUNT_TIMEOUT_MS
+			).catch(() => null)
 		)
 	)
 
